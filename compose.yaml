@@ -17,7 +17,7 @@ services:
     networks:
       - moodle-network
   webserver:
-    image: moodlehq/moodle-php-apache:8.4
+    image: moodlehq/moodle-php-apache:8.2
     depends_on:
       - database
     ports:
