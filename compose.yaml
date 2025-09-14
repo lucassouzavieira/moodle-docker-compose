@@ -1,0 +1,36 @@
+services:
+  database:
+    image: mysql:latest
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_bin
+      --innodb_file_per_table=On
+      --wait-timeout=28800
+      --skip-log-bin
+    environment:
+      MYSQL_ROOT_PASSWORD: "m@0dl3ing"
+      MYSQL_USER: moodle
+      MYSQL_PASSWORD: "m@0dl3ing"
+      MYSQL_DATABASE: moodle
+    ports:
+      - "3306:3306"
+    networks:
+      - moodle-network
+  webserver:
+    image: moodlehq/moodle-php-apache:8.4
+    depends_on:
+      - database
+    ports:
+      - "8080:80"
+    volumes:
+      - "./moodle:/var/www/html:rw"
+      - "./data:/var/www/moodledata:rw"
+    environment:
+      PHP_INI-upload_max_filesize: 200M
+      PHP_INI-post_max_size: 200M
+      PHP_EXTENSION_xdebug: 1
+    networks:
+      - moodle-network
+networks:
+  moodle-network:
+    driver: bridge
